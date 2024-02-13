@@ -1,0 +1,29 @@
+name: run
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker image tag'
+        required: false
+        default: 'latest'
+      operand1:
+        description: 'First operand'
+        required: true
+      operand2:
+        description: 'Second operand'
+        required: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        
+      - name: Pull Docker image
+        run: docker pull zemlianin/sum-app:${{ inputs.tag }}
+
+      - name: Run Docker container
+        run: docker run zemlianin/sum-app:${{ inputs.tag }} ${{ inputs.operand1 }}  ${{ inputs.operand2 }} 
