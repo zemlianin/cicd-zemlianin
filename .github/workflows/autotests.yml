@@ -54,6 +54,13 @@ jobs:
             --set 'args={\"test\"\, \"http://converter:8080\"}' \
             --wait --wait-for-jobs --timeout 60s
 
+      - name: Debug k8s entities
+        run: |
+          kubectl get deployments
+          kubectl get pods
+          kubectl get services
+          
+
       - name: Debug logs
         run: |
           echo "Rate logs:"
