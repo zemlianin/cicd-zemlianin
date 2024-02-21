@@ -1,14 +1,18 @@
 package org.example;
 
+import org.example.configurations.AppSettings;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.Random;
+
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        try {
-            var firstNumber = Integer.parseInt(args[0]);
-            var secondNumber = Integer.parseInt(args[1]);
-            var result = firstNumber + secondNumber;
-            System.out.println(result);
-        } catch (Exception e) {
-            System.out.println("Иди от сюда - Idi ot suda");
-        }
+        var random = new Random();
+
+        AppSettings.randomNumber = random.nextInt();
+
+        SpringApplication.run(Main.class, args);
     }
 }
