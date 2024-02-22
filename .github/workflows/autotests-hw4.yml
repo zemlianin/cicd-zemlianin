@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: central-university-dev/hse-ab-cicd-hw
+          repository: central-university-dev/hse-autotests
           ref: main
 
       - name: Start minikube
