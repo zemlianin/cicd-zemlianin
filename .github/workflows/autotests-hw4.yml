@@ -20,9 +20,10 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          repository: central-university-dev/hse-ab-cicd-hw@main
+          repository: central-university-dev/hse-ab-cicd-hw
+          ref: main
 
       - name: Start minikube
         uses: medyagh/setup-minikube@master
