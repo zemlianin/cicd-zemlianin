@@ -58,6 +58,7 @@ jobs:
             --wait --wait-for-jobs --timeout 180s
 
       - name: Debug k8s entities
+        if: always()
         run: |
           kubectl get deployments
           kubectl get pods
@@ -66,6 +67,7 @@ jobs:
           
 
       - name: Debug logs
+        if: always()
         run: |
           kubectl get pods -n default|grep -v NAME|awk '{print $1}'|while read pods;do kubectl logs $pods;echo;done      
 
