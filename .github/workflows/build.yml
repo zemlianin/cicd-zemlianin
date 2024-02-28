@@ -41,4 +41,4 @@ jobs:
     with:
       chart-path: ./sum-app
       image-name: zemlianin/sum-app
-      image-tag: ${{ steps.set-image-tag.outputs.image_tag }}
+      image-tag: ${{ build.steps.set-image-tag.outputs.image_tag }}
