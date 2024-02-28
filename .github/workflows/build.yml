@@ -31,10 +31,6 @@ jobs:
       - name: Push Docker image
         run: docker push zemlianin/sum-app:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}
 
-      - name: Set image tag output
-        id: set-image-tag
-        run: echo "::set-output name=image_tag::${GITHUB_REF##*/}-${GITHUB_SHA:0:7}"
-
       - name: Tag Docker image as latest (if on main)
         if: github.ref == 'refs/heads/main'
         run: docker tag zemlianin/sum-app:${{ steps.set-image-tag.outputs.image_tag }} zemlianin/sum-app:latest && docker push zemlianin/sum-app:latest
@@ -45,4 +41,4 @@ jobs:
     with:
       chart-path: ./sum-app
       image-name: zemlianin/sum-app
-      image-tag: ${{ needs.build.outputs.image_tag }}
+      image-tag: ${{ GITHUB_REF##*/ }}-${{ GITHUB_SHA:0:7 }}
