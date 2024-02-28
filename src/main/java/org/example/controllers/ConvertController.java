@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.security.InvalidParameterException;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/convert")
