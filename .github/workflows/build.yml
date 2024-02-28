@@ -35,10 +35,14 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: docker tag zemlianin/sum-app:${{ steps.set-image-tag.outputs.image_tag }} zemlianin/sum-app:latest && docker push zemlianin/sum-app:latest
 
+      - name: Set image tag
+        id: set_tag
+        run: echo "::set-output name=tag::${GITHUB_REF##*/}-${GITHUB_SHA:0:7}"
+
   autotest:
     needs: build
     uses: central-university-dev/hse-ab-cicd-hw/.github/workflows/autotests.yml@main
     with:
       chart-path: ./sum-app
       image-name: zemlianin/sum-app
-      image-tag: ${{ github.ref }}-${{ github.sha }}:7
+      image-tag: ${{ steps.set_tag.outputs.tag }}
