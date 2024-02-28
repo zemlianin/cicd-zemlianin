@@ -41,4 +41,4 @@ jobs:
     with:
       chart-path: ./sum-app
       image-name: zemlianin/sum-app
-      image-tag: ${{ GITHUB_REF##*/ }}-${{ GITHUB_SHA:0:7 }}
+      image-tag: ${{ github.ref }}-${{ github.sha }}
