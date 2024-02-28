@@ -2,7 +2,7 @@ replicaCount: 3
 
 image:
   repository: zemlianin/sum-app
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: latest
 
 imagePullSecrets: []
@@ -54,21 +54,21 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-#  limits:
-#    cpu: 200m
-#    memory: 128Mi
-#  requests:
-#    cpu: 200m
-#    memory: 128Mi
+resources:
+  limits:
+    cpu: 600m
+    memory: 512Mi
+  requests:
+    cpu: 600m
+    memory: 512Mi
 
 livenessProbe: 
   httpGet:
-    path: /api/v1/resource/number/random
+    path: /actuator/health
     port: 8080
 readinessProbe:
   httpGet:
-    path: /api/v1/resource/number/random
+    path: /actuator/health
     port: 8080
 
 autoscaling:

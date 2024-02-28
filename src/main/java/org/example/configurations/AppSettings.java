@@ -5,8 +5,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppSettings {
-    public static Integer randomNumber;
 
     @Value("${random_value.max}")
     public Integer maxOfRandomNumber;
+
+    @Value("${rate_client.url}")
+    public String rateUrl;
+
+    @Value("${rate_client.timeout}")
+    public int timeout;
+
+    @Value("${rate_client.retry_attempts}")
+    public int retryAttempts;
+
+    @Value("${rate_client.retry_delay_millis}")
+    public int retryDelayMillis;
 }

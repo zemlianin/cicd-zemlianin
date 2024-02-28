@@ -31,3 +31,11 @@ jobs:
       - name: Tag Docker image as latest (if on main)
         if: github.ref == 'refs/heads/main'
         run: docker tag zemlianin/sum-app:${GITHUB_REF##*/}-${GITHUB_SHA:0:7} zemlianin/sum-app:latest && docker push zemlianin/sum-app:latest
+
+  autotest:
+    needs: build # имя вашей основной джобы сборки
+    uses: central-university-dev/hse-ab-cicd-hw/.github/workflows/autotests.yml@main
+    with:
+      chart-path: ./sum-app # путь к чарту из второй дз
+      image-name: zemlianin/sum-app # имя образа вашего приложения
+      image-tag: ${GITHUB_REF##*/}-${GITHUB_SHA:0:7} # таг образа, который собран в рамках данного ПРа
