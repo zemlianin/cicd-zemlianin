@@ -38,6 +38,7 @@ public class ConvertService {
                                   Currency currencyFrom,
                                   Currency currencyTo,
                                   BigDecimal amount) {
+        System.out.println(rates.getRates());
 
         if (!rates.getRates().containsKey(currencyFrom.toString())) {
             throw new IllegalArgumentException(currencyFrom.toString());

@@ -41,7 +41,8 @@ public class ConvertController {
             var currencyTo = stringToCurrency(to);
 
             return new ResponseEntity<>(new CurrencyResponse(currencyTo,
-                    convertService.convert(currencyFrom, currencyTo, amount).block()),
+                    convertService.convert(currencyFrom, currencyTo, amount).block()
+                    ),
                     HttpStatus.OK);
         } catch (InvalidParameterException e) {
             var response = new CurrencyResponse();
@@ -57,6 +58,10 @@ public class ConvertController {
 
         } catch (Exception e) {
             var response = new CurrencyResponse();
+            System.out.println(from);
+            System.out.println(to);
+            System.out.println(amount);
+
             response.setMessage("Unknown Error");
 
             return new ResponseEntity<>(response, HttpStatus.valueOf(500));

@@ -12,7 +12,7 @@ import java.time.Duration;
 @Component
 public class CurrencyClient {
     private final WebClient webClient;
-    
+
     private final AppSettings appSettings;
 
     public CurrencyClient(WebClient webClient, AppSettings appSettings) {
