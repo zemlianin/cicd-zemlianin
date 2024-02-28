@@ -32,26 +32,16 @@ jobs:
 
       - name: Tag Docker image as latest (if on main)
         if: github.ref == 'refs/heads/main'
-        run: docker tag zemlianin/sum-app:${{ steps.set_tag.outputs.image_tag }} zemlianin/sum-app:latest && docker push zemlianin/sum-app:latest
+        run: docker tag zemlianin/sum-app:${{ steps.set-image-tag.outputs.image_tag }} zemlianin/sum-app:latest && docker push zemlianin/sum-app:latest
 
       - name: Set image tag
         id: set_tag
-        run: echo "::set-output name=image_tag::${GITHUB_REF##*/}-${GITHUB_SHA:0:7}"
+        run: echo "::set-output name=tag::${GITHUB_REF##*/}-${GITHUB_SHA:0:7}"
 
   autotest:
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set image tag for autotest
-        id: set_tag_autotest
-        run: echo "::set-output name=image_tag::${{ needs.build.outputs.image_tag }}"
-
-      - name: Run autotests
-        uses: central-university-dev/hse-ab-cicd-hw/.github/workflows/autotests.yml@main
-        with:
-          chart-path: ./sum-app
-          image-name: zemlianin/sum-app
-          image-tag: ${{ steps.set_tag_autotest.outputs.image_tag }}
+    uses: central-university-dev/hse-ab-cicd-hw/.github/workflows/autotests.yml@main
+    with:
+      chart-path: ./sum-app
+      image-name: zemlianin/sum-app
+      image-tag: ${{ steps.set_tag.outputs.tag }}
