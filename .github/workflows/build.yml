@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "*" ]
   workflow_dispatch:
@@ -42,3 +42,4 @@ jobs:
       chart-path: ./sum-app
       image-name: zemlianin/sum-app
       image-tag: latest
+
