@@ -64,7 +64,6 @@ jobs:
           kubectl get pods
           kubectl get services
           kubectl get endpoints rates
-          
 
       - name: Debug logs
         if: always()
