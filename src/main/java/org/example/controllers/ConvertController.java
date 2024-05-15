@@ -39,7 +39,7 @@ public class ConvertController {
             var currencyTo = stringToCurrency(to);
 
             return new ResponseEntity<>(new CurrencyResponse(currencyTo,
-                    convertService.convert(currencyFrom, currencyTo, amount).block()
+                    convertService.convert(currencyFrom, currencyTo, amount)
                     ),
                     HttpStatus.OK);
         } catch (InvalidParameterException e) {

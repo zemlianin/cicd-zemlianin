@@ -63,8 +63,6 @@ public class RatesResponse {
    * Get rates
    * @return rates
    **/
-  @Schema(example = "{\"USD\":91.42,\"RUB\":1}", description = "")
-      @Valid
     public Map<String, BigDecimal> getRates() {
     return rates;
   }

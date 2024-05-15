@@ -20,11 +20,11 @@ public class CurrencyClient {
         this.appSettings = appSettings;
     }
 
-    public Mono<RatesResponse> GetRatesByCurrency() {
+    public Mono<String> GetRatesByCurrency() {
         return webClient
                 .get()
                 .retrieve()
-                .bodyToMono(RatesResponse.class)
+                .bodyToMono(String.class)
                 .retryWhen(Retry.fixedDelay(appSettings.retryAttempts,
                         Duration.ofMillis(appSettings.retryDelayMillis)));
     }

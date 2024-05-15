@@ -1,5 +1,7 @@
 package org.example.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.clients.CurrencyClient;
@@ -24,16 +26,23 @@ public class ConvertService {
         this.currencyClient = currencyClient;
     }
 
-    public Mono<BigDecimal> convert(Currency currencyFrom, Currency currencyTo, BigDecimal amount) {
-        Mono<RatesResponse> ratesMono = currencyClient.GetRatesByCurrency();
+    public BigDecimal convert(Currency currencyFrom, Currency currencyTo, BigDecimal amount) {
+        var objectMapper = new ObjectMapper();
+        var jsonString = currencyClient.GetRatesByCurrency().block();
+        RatesResponse ratesMono = null;
+        System.out.println(jsonString);
+        try {
+            ratesMono = objectMapper.readValue(jsonString, RatesResponse.class);
+        } catch (JsonProcessingException e) {
+            System.out.println("Error of parsing");
+        }
 
-        return ratesMono.map(ratesResponse -> convertBase(ratesResponse, currencyFrom, currencyTo, amount))
-                .onErrorResume(error -> {
-                    logger.error(error.getMessage());
-                    return Mono.error(error);
-                });
+        if(ratesMono == null){
+            System.out.println("Rates is null");
+        }
+
+        return convertBase(ratesMono, currencyFrom, currencyTo, amount);
     }
-
     public BigDecimal convertBase(RatesResponse rates,
                                   Currency currencyFrom,
                                   Currency currencyTo,
