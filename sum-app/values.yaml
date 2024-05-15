@@ -68,7 +68,7 @@ livenessProbe:
     port: 8080
 readinessProbe:
   httpGet:
-    path: /rates
+    path: /actuator/health
     port: 8080
 
 autoscaling:
