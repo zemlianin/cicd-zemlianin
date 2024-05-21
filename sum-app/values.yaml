@@ -54,15 +54,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources:
-  limits:
-    cpu: 600m
-    memory: 512Mi
-  requests:
-    cpu: 600m
-    memory: 512Mi
+resources: {}
 
-livenessProbe: 
+livenessProbe:
   httpGet:
     path: /rates
     port: 8080
@@ -70,6 +64,7 @@ readinessProbe:
   httpGet:
     path: /rates
     port: 8080
+
 
 autoscaling:
   enabled: false
