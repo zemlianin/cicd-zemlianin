@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 public class CurrencyResponse {
     private Currency currency;
     private BigDecimal amount;
-    private String message;
 
     public CurrencyResponse() {
     }
@@ -32,13 +31,5 @@ public class CurrencyResponse {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
