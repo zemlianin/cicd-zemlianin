@@ -62,7 +62,7 @@ public class ConvertService {
         }
 
         if (currencyTo == Currency.RUB) {
-            return rates.getRates().get(currencyFrom.toString()).multiply(amount);
+            return rates.getRates().get(currencyFrom.toString()).multiply(amount).setScale(2, RoundingMode.HALF_EVEN);
         } else if (currencyFrom == Currency.RUB) {
             return amount.divide(rates.getRates().get(currencyTo.toString()), 2, RoundingMode.HALF_EVEN);
         } else {
