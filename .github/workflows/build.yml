@@ -30,7 +30,7 @@ jobs:
         run: docker push zemlianin/sum-app:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}
 
       - name: Tag Docker image as latest
-        # if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           docker tag zemlianin/sum-app:${{ steps.set-image-tag.outputs.image_tag }} zemlianin/sum-app:latest
           docker push zemlianin/sum-app:latest
