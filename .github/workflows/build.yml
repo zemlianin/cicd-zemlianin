@@ -44,3 +44,14 @@ jobs:
       image-name: zemlianin/sum-app
       image-tag: latest
 
+    autotest:
+      needs: build # имя вашей основной джобы сборки
+      uses: central-university-dev/hse-ab-cicd-hw/.github/workflows/autotests-hw4.yml@main
+      with:
+        chart-path: ./sum-app # путь к чарту из второй дз
+        converter-image-name: foo/bar-converter # имя образа вашего приложения
+        accounts-image-name: foo/bar-accounts # имя образа вашего приложения
+        image-tag: latest # таг образа, который собран в рамках данного ПРа
+      secrets:
+        HSE_LOKI_TOKEN: ${{ secrets.HSE_LOKI_TOKEN }}
+
