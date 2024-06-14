@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.clients.ConverterClient;
 import org.example.clients.KeycloakClient;
+import org.example.clients.grpc.GrpcConverterClient;
 import org.example.configurations.AppSettings;
 import org.example.models.entities.Account;
 import org.example.models.entities.Customer;
@@ -28,17 +29,20 @@ public class CustomerService {
     private final ConverterClient converterClient;
     private final KeycloakClient keycloakClient;
     private final AppSettings appSettings;
+    private final GrpcConverterClient grpcConverterClient;
 
     @Autowired
     public CustomerService(AccountRepository accountRepository,
                            CustomerRepository customerRepository,
                            ConverterClient converterClient,
                            KeycloakClient keycloakClient,
-                           AppSettings appSettings) {
+                           AppSettings appSettings,
+                           GrpcConverterClient grpcConverterClient) {
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
         this.converterClient = converterClient;
         this.keycloakClient = keycloakClient;
+        this.grpcConverterClient = grpcConverterClient;
         this.appSettings = appSettings;
     }
 
@@ -90,9 +94,10 @@ public class CustomerService {
             }
 
             if (!account.getCurrency().equals(currency)) {
-                var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
-                var convertedAmount = converterClient.GetConvertedAmount(account.getCurrency(), currency, account.getBalance(), accessToken);
-                totalBalance = totalBalance.add(convertedAmount.block().getAmount());
+              //  var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
+              //  var convertedAmount = converterClient.GetConvertedAmount(account.getCurrency(), currency, account.getBalance(), accessToken);
+             var convertedAmount = grpcConverterClient.convert(account.getCurrency(), currency, account.getBalance());
+                totalBalance = totalBalance.add(convertedAmount);
             } else {
                 totalBalance = totalBalance.add(account.getBalance());
             }

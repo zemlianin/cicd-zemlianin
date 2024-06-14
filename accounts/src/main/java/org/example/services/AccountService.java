@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.clients.ConverterClient;
 import org.example.clients.KeycloakClient;
+import org.example.clients.grpc.GrpcConverterClient;
 import org.example.configurations.AppSettings;
 import org.example.models.entities.Account;
 import org.example.models.entities.Customer;
@@ -29,18 +30,22 @@ public class AccountService {
     private final ConverterClient converterClient;
     private final KeycloakClient keycloakClient;
     private final AppSettings appSettings;
+    private final GrpcConverterClient grpcConverterClient;
 
     @Autowired
     public AccountService(CustomerRepository customerRepository,
                           AccountRepository accountRepository,
                           ConverterClient converterClient,
                           KeycloakClient keycloakClient,
-                          AppSettings appSettings){
+                          AppSettings appSettings,
+                          GrpcConverterClient grpcConverterClient
+    ){
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
         this.converterClient = converterClient;
         this.keycloakClient = keycloakClient;
         this.appSettings = appSettings;
+        this.grpcConverterClient = grpcConverterClient;
     }
     public AccountResponse createAccount(AccountRequest accountRequest) {
         if (accountRequest.getCustomerId() == null || accountRequest.getCurrency() == null) {
@@ -131,13 +136,17 @@ public class AccountService {
         if (senderAccount.getCurrency().equals(receiverAccount.getCurrency())) {
             amountInReceiverCurrency = transferRequest.getAmountInSenderCurrency();
         } else {
-            var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
+            amountInReceiverCurrency = grpcConverterClient.convert(
+                    senderAccount.getCurrency(),
+                    receiverAccount.getCurrency(),
+                    transferRequest.getAmountInSenderCurrency());
+            /*var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
             amountInReceiverCurrency = converterClient.GetConvertedAmount(
                     senderAccount.getCurrency(),
                     receiverAccount.getCurrency(),
                     transferRequest.getAmountInSenderCurrency(),
                     accessToken
-            ).block().getAmount();
+            ).block().getAmount();*/
         }
 
         senderAccount.setBalance(senderAccount.getBalance().subtract(transferRequest.getAmountInSenderCurrency()));

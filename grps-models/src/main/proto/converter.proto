@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "org.example.grpc";
+option java_outer_classname = "ConverterProto";
+
+message ConvertRequest {
+  string from_currency = 1;
+  string to_currency = 2;
+  double amount = 3;
+}
+
+message ConvertResponse {
+  double converted_amount = 1;
+}
+
+service ConverterService {
+  rpc Convert (ConvertRequest) returns (ConvertResponse);
+}
