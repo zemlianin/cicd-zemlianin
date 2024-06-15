@@ -38,7 +38,7 @@ jobs:
 
   autotest:
     needs: build # имя вашей основной джобы сборки
-    uses: autotests-hw4.yml
+    uses: zemlianin/cicd-zemlianin/edit/task-4/.github/workflows/autotests-hw4.yml@task-4
     with:
       chart-path: ./sum-app # путь к чарту из второй дз
       converter-image-name: foo/bar-converter # имя образа вашего приложения
