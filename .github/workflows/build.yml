@@ -35,14 +35,13 @@ jobs:
           docker tag zemlianin/sum-app:${{ steps.set-image-tag.outputs.image_tag }} zemlianin/sum-app:latest
           docker push zemlianin/sum-app:latest
       
-
   autotest:
     needs: build # имя вашей основной джобы сборки
     uses: ./.github/workflows/autotests-hw4.yml
     with:
       chart-path: ./sum-app # путь к чарту из второй дз
-      converter-image-name: foo/bar-converter # имя образа вашего приложения
-      accounts-image-name: foo/bar-accounts # имя образа вашего приложения
+      converter-image-name: zemlianin/converter # имя образа вашего приложения
+      accounts-image-name: zemlianin/accounts # имя образа вашего приложения
       image-tag: latest # таг образа, который собран в рамках данного ПРа
     secrets:
       HSE_LOKI_TOKEN: ${{ secrets.HSE_LOKI_TOKEN }}
