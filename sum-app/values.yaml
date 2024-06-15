@@ -79,6 +79,8 @@ extraEnv:
     value: http://localhost:8081
   - name: KEYCLOAK_URL
     value: http://194.87.186.59:8080
+  - name: RATE_URL
+    value: http://localhost:8080
   - name: KEYCLOAK_REALM
     value: auth
   - name: CLIENT_ID

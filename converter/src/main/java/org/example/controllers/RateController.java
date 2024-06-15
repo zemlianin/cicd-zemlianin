@@ -15,7 +15,6 @@ import java.util.Map;
 @RequestMapping("/rates")
 public class RateController {
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
     public RatesResponse getRate() {
         RatesResponse response = new RatesResponse();
         response.setBase(Currency.RUB); // Установка базовой валюты

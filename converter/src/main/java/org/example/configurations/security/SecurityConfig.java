@@ -22,6 +22,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authz) -> authz
                 .requestMatchers(HttpMethod.GET, "/convert/ping").permitAll()
+                .requestMatchers(HttpMethod.GET, "/rates").permitAll()
                 .anyRequest().authenticated()
         );
 
