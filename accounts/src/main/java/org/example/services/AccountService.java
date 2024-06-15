@@ -4,6 +4,7 @@ import org.example.clients.ConverterClient;
 import org.example.clients.KeycloakClient;
 import org.example.clients.grpc.GrpcConverterClient;
 import org.example.configurations.AppSettings;
+import org.example.models.AccountMessage;
 import org.example.models.entities.Account;
 import org.example.models.entities.Customer;
 import org.example.models.dao.*;
@@ -31,6 +32,7 @@ public class AccountService {
     private final KeycloakClient keycloakClient;
     private final AppSettings appSettings;
     private final GrpcConverterClient grpcConverterClient;
+    private final AccountNotificationService accountNotificationService;
 
     @Autowired
     public AccountService(CustomerRepository customerRepository,
@@ -38,15 +40,18 @@ public class AccountService {
                           ConverterClient converterClient,
                           KeycloakClient keycloakClient,
                           AppSettings appSettings,
-                          GrpcConverterClient grpcConverterClient
-    ){
+                          GrpcConverterClient grpcConverterClient,
+                          AccountNotificationService accountNotificationService
+    ) {
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
         this.converterClient = converterClient;
         this.keycloakClient = keycloakClient;
         this.appSettings = appSettings;
         this.grpcConverterClient = grpcConverterClient;
+        this.accountNotificationService = accountNotificationService;
     }
+
     public AccountResponse createAccount(AccountRequest accountRequest) {
         if (accountRequest.getCustomerId() == null || accountRequest.getCurrency() == null) {
             throw new IllegalArgumentException("Missing required fields");
@@ -73,6 +78,9 @@ public class AccountService {
         account.setBalance(BigDecimal.ZERO);
 
         Account savedAccount = accountRepository.save(account);
+
+        notifyAccountChange(savedAccount);
+
         return new AccountResponse(savedAccount.getAccountId());
     }
 
@@ -104,7 +112,9 @@ public class AccountService {
 
         Account account = accountOpt.get();
         account.setBalance(account.getBalance().add(topUpRequest.getAmount()));
+
         accountRepository.save(account);
+        notifyAccountChange(account);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -136,17 +146,20 @@ public class AccountService {
         if (senderAccount.getCurrency().equals(receiverAccount.getCurrency())) {
             amountInReceiverCurrency = transferRequest.getAmountInSenderCurrency();
         } else {
-            amountInReceiverCurrency = grpcConverterClient.convert(
-                    senderAccount.getCurrency(),
-                    receiverAccount.getCurrency(),
-                    transferRequest.getAmountInSenderCurrency());
-            /*var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
-            amountInReceiverCurrency = converterClient.GetConvertedAmount(
-                    senderAccount.getCurrency(),
-                    receiverAccount.getCurrency(),
-                    transferRequest.getAmountInSenderCurrency(),
-                    accessToken
-            ).block().getAmount();*/
+            if (appSettings.keepGrpcConnect) {
+                amountInReceiverCurrency = grpcConverterClient.convert(
+                        senderAccount.getCurrency(),
+                        receiverAccount.getCurrency(),
+                        transferRequest.getAmountInSenderCurrency());
+            } else {
+                var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
+                amountInReceiverCurrency = converterClient.GetConvertedAmount(
+                        senderAccount.getCurrency(),
+                        receiverAccount.getCurrency(),
+                        transferRequest.getAmountInSenderCurrency(),
+                        accessToken
+                ).block().getAmount();
+            }
         }
 
         senderAccount.setBalance(senderAccount.getBalance().subtract(transferRequest.getAmountInSenderCurrency()));
@@ -154,5 +167,16 @@ public class AccountService {
 
         accountRepository.save(senderAccount);
         accountRepository.save(receiverAccount);
+        notifyAccountChange(senderAccount);
+        notifyAccountChange(receiverAccount);
+
+    }
+
+    private void notifyAccountChange(Account account) {
+        AccountMessage message = new AccountMessage();
+        message.setAccountNumber(account.getAccountId());
+        message.setCurrency(account.getCurrency());
+        message.setBalance(account.getBalance());
+        accountNotificationService.notifyAccountChange(message);
     }
 }

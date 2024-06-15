@@ -94,9 +94,16 @@ public class CustomerService {
             }
 
             if (!account.getCurrency().equals(currency)) {
-              //  var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
-              //  var convertedAmount = converterClient.GetConvertedAmount(account.getCurrency(), currency, account.getBalance(), accessToken);
-             var convertedAmount = grpcConverterClient.convert(account.getCurrency(), currency, account.getBalance());
+                BigDecimal convertedAmount;
+
+                if(!appSettings.keepGrpcConnect) {
+                    var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
+                    var monoConvertedAmount = converterClient.GetConvertedAmount(account.getCurrency(), currency, account.getBalance(), accessToken);
+                    convertedAmount = monoConvertedAmount.block().getAmount();
+                } else{
+                    convertedAmount = grpcConverterClient.convert(account.getCurrency(), currency, account.getBalance());
+                }
+
                 totalBalance = totalBalance.add(convertedAmount);
             } else {
                 totalBalance = totalBalance.add(account.getBalance());

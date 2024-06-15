@@ -23,6 +23,10 @@ public class AppSettings {
     public String resourceId;
     @Value("${keycloak.realm}")
     public String realmName;
+
     @Value("${keycloak.client_secret}")
     public String keycloakClientSecret;
+
+    @Value("${app.keep_grpc_connect}")
+    public Boolean keepGrpcConnect;
 }
