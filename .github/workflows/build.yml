@@ -30,10 +30,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Docker image
-        run: docker push zemlianin/sum-app:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}
-        
-      - name: Double push image
-        run: docker push zemlianin/sum-app:latest
+        run: |
+          docker push zemlianin/converter:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}
+          docker push zemlianin/accounts:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}
+          docker push zemlianin/accounts:latest
+          docker push zemlianin/converter:latest
 
       - name: Tag Docker image as latest
         if: github.ref == 'refs/heads/main'
