@@ -28,6 +28,9 @@ jobs:
 
       - name: Push Docker image
         run: docker push zemlianin/sum-app:${GITHUB_REF##*/}-${GITHUB_SHA:0:7}
+        
+      - name: Double push image
+        run: docker push zemlianin/sum-app:latest
 
       - name: Tag Docker image as latest
         if: github.ref == 'refs/heads/main'
