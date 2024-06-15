@@ -4,7 +4,8 @@ COPY pom.xml .
 COPY converter/pom.xml converter/
 COPY converter/src converter/src
 WORKDIR /app/converter
-RUN mvn clean package -DskipTests
+RUN mvn clean install -DskipTests
+RUN mvn -o compile
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app

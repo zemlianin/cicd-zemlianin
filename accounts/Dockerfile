@@ -4,7 +4,8 @@ COPY pom.xml .
 COPY accounts/pom.xml accounts/
 COPY accounts/src accounts/src
 WORKDIR /app/accounts
-RUN mvn clean package -DskipTests
+RUN mvn clean install -DskipTests
+RUN mvn -o compile
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
