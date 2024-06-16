@@ -14,7 +14,7 @@ RUN mvn clean install -DskipTests
 WORKDIR /app/converter
 RUN mvn -o compile
 
-FROM openjdk:17-jdk-slim 
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/converter/target/*.jar /app/app.jar
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
