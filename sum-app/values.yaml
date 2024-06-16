@@ -10,29 +10,17 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
   automount: true
-  # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
 
 podAnnotations: {}
 podLabels: {}
 
 podSecurityContext: {}
-  # fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: NodePort
@@ -42,17 +30,12 @@ ingress:
   enabled: false
   className: ""
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources: {}
 
@@ -65,29 +48,42 @@ readinessProbe:
     path: /rates
     port: 8080
 
-
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
-# Additional volumes on the output Deployment definition.
 volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
 
-# Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
 
 nodeSelector: {}
 
 tolerations: []
 
 affinity: {}
+
+extraEnv:
+  - name: DB_HOST
+    value: localhost
+  - name: DB_PORT
+    value: "5432"
+  - name: DB_NAME
+    value: stage
+  - name: DB_USER
+    value: postgres
+  - name: DB_PASSWORD
+    value: 1Q2w3e4r5t
+  - name: CONVERTER_URL
+    value: http://localhost:8081
+  - name: KEYCLOAK_URL
+    value: http://194.87.186.59:8080
+  - name: RATE_URL
+    value: http://localhost:8080
+  - name: KEYCLOAK_REALM
+    value: auth
+  - name: CLIENT_ID
+    value: dwh-manager
+  - name: CLIENT_SECRET
+    value: zThmHP3m3Wl5QIscj7t3Nf9ZOyAOPTRz
