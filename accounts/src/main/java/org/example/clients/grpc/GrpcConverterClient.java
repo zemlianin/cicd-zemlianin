@@ -8,19 +8,16 @@ import org.example.grpc.ConverterServiceGrpc;
 import org.example.models.enums.Currency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+
 @Component
 public class GrpcConverterClient {
-    private ConverterServiceGrpc.ConverterServiceBlockingStub blockingStub;
+    private final ConverterServiceGrpc.ConverterServiceBlockingStub blockingStub;
 
-    private AppSettings appSettings;
     @Autowired
-    public GrpcConverterClient(AppSettings appSettings){
-        this.appSettings = appSettings;
-    }
-
-    public GrpcConverterClient() {
+    public GrpcConverterClient(AppSettings appSettings) {
         var parts = appSettings.converterUrl.split(":");
         System.out.println(parts[0]);
         System.out.println(parts[1]);
