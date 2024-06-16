@@ -37,6 +37,7 @@ public class ConvertController {
                                                       @RequestParam(value = "from", required = false) String from,
                                                       @RequestParam(value = "to", required = false) String to,
                                                       @RequestParam(value = "amount", required = false) BigDecimal amount) {
+        System.out.println("пойман запрос от аккаунтс");
         var currencyFrom = stringToCurrency(from);
         var currencyTo = stringToCurrency(to);
 
