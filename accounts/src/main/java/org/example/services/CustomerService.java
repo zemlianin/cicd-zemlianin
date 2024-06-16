@@ -102,12 +102,12 @@ public class CustomerService {
                 BigDecimal convertedAmount;
 
                 if(!appSettings.keepGrpcConnect) {
-                    System.out.println("коннекчусь по грпс");
-
                     var accessToken = keycloakClient.auth(appSettings.resourceId, appSettings.keycloakClientSecret);
                     var monoConvertedAmount = converterClient.GetConvertedAmount(account.getCurrency(), currency, account.getBalance(), accessToken);
                     convertedAmount = monoConvertedAmount.block().getAmount();
                 } else{
+                    System.out.println("Начинаю коннектиться");
+
                     convertedAmount = grpcConverterClient.convert(account.getCurrency(), currency, account.getBalance());
                 }
 

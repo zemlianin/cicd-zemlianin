@@ -25,7 +25,9 @@ public class GrpcConverterClient {
                 .setToCurrency(toCurrency.toString())
                 .setAmount(amount.doubleValue())
                 .build();
+        System.out.println("Запрос создан");
         ConverterProto.ConvertResponse response = blockingStub.convert(request);
+        System.out.println("конвертация прошла");
         return BigDecimal.valueOf(response.getConvertedAmount());
     }
 }
