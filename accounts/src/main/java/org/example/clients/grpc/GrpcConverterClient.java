@@ -22,7 +22,7 @@ public class GrpcConverterClient {
         System.out.println(parts[0]);
         System.out.println(parts[1]);
 
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(parts[0], Integer.getInteger(parts[1]))
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(parts[0], Integer.parseInt(parts[1]))
                 .usePlaintext()
                 .build();
         blockingStub = ConverterServiceGrpc.newBlockingStub(channel);
