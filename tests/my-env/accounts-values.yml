@@ -1,0 +1,24 @@
+replicaCount: 1
+
+extraEnv:
+  - name: KEYCLOAK_URL
+    value: http://194.87.186.59:8080/
+  - name: KEYCLOAK_REALM
+    value: auth
+  - name: CONVERTER_URL
+    value: http://localhost:8080
+  - name: CLIENT_ID
+    value: dwh_manager
+  - name: CLIENT_SECRET
+    value: zThmHP3m3Wl5QIscj7t3Nf9ZOyAOPTRz
+  - name: DB_HOST
+    value: 194.87.186.59
+  - name: DB_PORT
+    value: 5433
+  - name: DB_NAME
+    value: stage
+  - name: DB_USER
+    value: postgres2
+  - name: DB_PASSWORD
+    value: 1Q2w3e4r5t
+

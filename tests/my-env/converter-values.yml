@@ -1,0 +1,13 @@
+replicaCount: 1
+
+extraEnv:
+  - name: KEYCLOAK_URL
+    value: http://194.87.186.59:8080/
+  - name: KEYCLOAK_REALM
+    value: auth
+  - name: RATES_URL
+    value: http://localhost:8080/
+  - name: CLIENT_ID
+    value: dwh-manager
+  - name: CLIENT_SECRET
+    value: ZLM7AmkwCGsVknmqvbRSJYllwJi4zcGf
