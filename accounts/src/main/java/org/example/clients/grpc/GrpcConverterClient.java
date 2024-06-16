@@ -22,6 +22,9 @@ public class GrpcConverterClient {
 
     public GrpcConverterClient() {
         var parts = appSettings.converterUrl.split(":");
+        System.out.println(parts[0]);
+        System.out.println(parts[1]);
+
         ManagedChannel channel = ManagedChannelBuilder.forAddress(parts[0], Integer.getInteger(parts[1]))
                 .usePlaintext()
                 .build();
@@ -29,15 +32,21 @@ public class GrpcConverterClient {
     }
 
     public BigDecimal convert(Currency fromCurrency, Currency toCurrency, BigDecimal amount) {
-        ConverterProto.ConvertRequest request = ConverterProto.ConvertRequest.newBuilder()
-                .setFromCurrency(fromCurrency.toString())
-                .setToCurrency(toCurrency.toString())
-                .setAmount(amount.doubleValue())
-                .build();
-        System.out.println("Запрос создан");
-        ConverterProto.ConvertResponse response = blockingStub.convert(request);
-        System.out.println("конвертация прошла");
-        return BigDecimal.valueOf(response.getConvertedAmount());
+        try {
+            ConverterProto.ConvertRequest request = ConverterProto.ConvertRequest.newBuilder()
+                    .setFromCurrency(fromCurrency.toString())
+                    .setToCurrency(toCurrency.toString())
+                    .setAmount(amount.doubleValue())
+                    .build();
+            System.out.println("Запрос создан");
+            ConverterProto.ConvertResponse response = blockingStub.convert(request);
+            System.out.println("конвертация прошла");
+            return BigDecimal.valueOf(response.getConvertedAmount());
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            throw e;
+        }
+
     }
 }
 

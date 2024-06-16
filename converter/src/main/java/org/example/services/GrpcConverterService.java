@@ -20,14 +20,17 @@ public class GrpcConverterService extends ConverterServiceGrpc.ConverterServiceI
 
     @Override
     public void convert(ConverterProto.ConvertRequest request, StreamObserver<ConverterProto.ConvertResponse> responseObserver) {
+        System.out.println("прошла авторизация");
         BigDecimal convertedAmount = convertService.convert(Currency.fromValue(request.getFromCurrency()),
                 Currency.fromValue(request.getToCurrency()),
                 BigDecimal.valueOf(request.getAmount()));
         ConverterProto.ConvertResponse response = ConverterProto.ConvertResponse.newBuilder()
                 .setConvertedAmount(convertedAmount.doubleValue())
                 .build();
+        System.out.println("направляю ответ");
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+        System.out.println("Ответ направлен");
     }
 }
 
