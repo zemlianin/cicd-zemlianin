@@ -87,6 +87,7 @@ public class AccountService {
 
     public AccountBalanceResponse getAccountBalance(Long accountNumber) {
         Optional<Account> accountOpt = accountRepository.findById(accountNumber);
+        System.out.println("получил запрос на получение баланса");
 
         if (accountOpt.isEmpty()) {
             throw new IllegalArgumentException("Account not found");

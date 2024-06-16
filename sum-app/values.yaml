@@ -24,7 +24,9 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 8080
+  ports:
+    http: 8080
+    grpc: 9090
 
 ingress:
   enabled: false

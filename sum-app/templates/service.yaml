@@ -7,9 +7,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.ports.http }}
+      targetPort: 8080
       protocol: TCP
       name: http
+    - port: {{ .Values.service.ports.grpc }}
+      targetPort: 9090
+      protocol: TCP
+      name: grpc
   selector:
     {{- include "sum-app.selectorLabels" . | nindent 4 }}

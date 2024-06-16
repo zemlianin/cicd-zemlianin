@@ -12,8 +12,8 @@ spring.jpa.show-sql=true
 # Settings
 client.timeout=10000
 app.keep_grpc_connect=true
- converter.url=http://localhost:8081
-#converter.url=${CONVERTER_URL}
+converter.url=http://localhost:8081
+# converter.url=${CONVERTER_URL}
 client.retry_attempts=3
 client.retry_delay_millis = 1000
 logging.level.org.springframework.security=TRACE
