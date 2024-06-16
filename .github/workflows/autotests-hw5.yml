@@ -1,17 +1,23 @@
 name: Autotests-hw5
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ ]
-
-env:
-  CHART_PATH: todo
-  CONVERTER_IMAGE_NAME: todo
-  ACCOUNTS_IMAGE_NAME: todo
-  IMAGE_TAG: todo
-
+  workflow_call:
+    inputs:
+      chart-path:
+        required: true
+        type: string
+      converter-image-name:
+        required: true
+        type: string
+      accounts-image-name:
+        required: true
+        type: string
+      image-tag:
+        required: true
+        type: string
+    secrets:
+      HSE_LOKI_TOKEN:
+        required: true
 
 jobs:
   tests:
@@ -58,7 +64,7 @@ jobs:
       - name: Deploy rates
         continue-on-error: true
         run: |
-          helm upgrade --install rates $CHART_PATH \
+          helm upgrade --install rates ${{ inputs.chart-path }} \
             --set fullnameOverride=rates \
             --set image.repository=miraclewisp/hse-rates \
             --set image.tag=auth-amd64 \
@@ -68,20 +74,20 @@ jobs:
       - name: Deploy converter
         continue-on-error: true
         run: |
-          helm upgrade --install converter $CHART_PATH \
+          helm upgrade --install converter ${{ inputs.chart-path }} \
             --set fullnameOverride=converter \
-            --set image.repository=$CONVERTER_IMAGE_NAME \
-            --set image.tag=$IMAGE_TAG \
+            --set image.repository=${{ inputs.converter-image-name }}  \
+            --set image.tag=${{ inputs.image-tag }}  \
             -f tests/hw5/converter-values.yml \
             --wait --timeout 180s
 
       - name: Deploy accounts
         continue-on-error: true
         run: |
-          helm upgrade --install accounts $CHART_PATH \
+          helm upgrade --install accounts ${{ inputs.chart-path }} \
             --set fullnameOverride=accounts \
-            --set image.repository=$ACCOUNTS_IMAGE_NAME \
-            --set image.tag=$IMAGE_TAG \
+            --set image.repository=${{ inputs.accounts-image-name }}  \
+            --set image.tag=${{ inputs.image-tag }} \
             -f tests/hw5/accounts-values.yml \
             --wait --timeout 180s
 
