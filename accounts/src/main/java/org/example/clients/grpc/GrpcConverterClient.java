@@ -2,18 +2,27 @@ package org.example.clients.grpc;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import org.example.configurations.AppSettings;
 import org.example.grpc.ConverterProto;
 import org.example.grpc.ConverterServiceGrpc;
 import org.example.models.enums.Currency;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 @Component
 public class GrpcConverterClient {
-    private final ConverterServiceGrpc.ConverterServiceBlockingStub blockingStub;
+    private ConverterServiceGrpc.ConverterServiceBlockingStub blockingStub;
+
+    private AppSettings appSettings;
+    @Autowired
+    public GrpcConverterClient(AppSettings appSettings){
+        this.appSettings = appSettings;
+    }
 
     public GrpcConverterClient() {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9090)
+        var parts = appSettings.converterUrl.split(":");
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(parts[0], Integer.getInteger(parts[1]))
                 .usePlaintext()
                 .build();
         blockingStub = ConverterServiceGrpc.newBlockingStub(channel);
