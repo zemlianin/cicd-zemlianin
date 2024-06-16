@@ -11,7 +11,7 @@
     <modules>
         <module>accounts</module>
         <module>converter</module>
-        <module>grps-models</module>
+        <module>grpc-models</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
