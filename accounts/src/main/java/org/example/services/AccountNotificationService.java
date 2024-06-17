@@ -15,8 +15,6 @@ public class AccountNotificationService {
     }
 
     public void notifyAccountChange(AccountMessage accountMessage) {
-        System.out.println("--11---");
-        System.out.println(accountMessage.getBalance());
         messagingTemplate.convertAndSend("/topic/accounts", accountMessage);
     }
 }

@@ -133,7 +133,6 @@ public class AccountService {
             throw new IllegalArgumentException("Amount must be greater than zero");
         }
 
-        System.out.println("-----");
         System.out.println(transferRequest.getAmountInSenderCurrency());
 
         Optional<Account> senderAccountOpt = accountRepository.findById(transferRequest.getSenderAccount());

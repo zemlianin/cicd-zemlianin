@@ -75,7 +75,6 @@ public class CustomerService {
 
     public BalanceResponse getCustomerBalance(Long customerId, Currency currency) {
         Optional<Customer> customerOpt = customerRepository.findById(customerId);
-        System.out.println("получил запрос на получение баланса для кастомера");
 
         if (customerOpt.isEmpty()) {
             throw new IllegalArgumentException("Customer not found");
@@ -90,14 +89,12 @@ public class CustomerService {
         BigDecimal totalBalance = BigDecimal.ZERO;
 
         for (Account account : accounts) {
-            System.out.println("вошел в цикл");
 
             if (account.getBalance().compareTo(BigDecimal.ZERO) == 0) {
                 continue;
             }
 
             if (!account.getCurrency().equals(currency)) {
-                System.out.println("Начинаю перевед валют");
 
                 BigDecimal convertedAmount;
 
@@ -106,7 +103,6 @@ public class CustomerService {
                     var monoConvertedAmount = converterClient.GetConvertedAmount(account.getCurrency(), currency, account.getBalance(), accessToken);
                     convertedAmount = monoConvertedAmount.block().getAmount();
                 } else{
-                    System.out.println("Начинаю коннектиться");
 
                     convertedAmount = grpcConverterClient.convert(account.getCurrency(), currency, account.getBalance());
                 }
