@@ -54,7 +54,7 @@ jobs:
       HSE_LOKI_TOKEN: ${{ secrets.HSE_LOKI_TOKEN }}
 
   autotest-hw-6:
-    needs: build # имя вашей основной джобы сборки
+    needs: autotest-hw-5 # имя вашей основной джобы сборки
     uses: ./.github/workflows/autotests-hw6.yml
     with:
       chart-path: ./sum-app # путь к чарту из второй дз
