@@ -1,6 +1,7 @@
 package org.example.clients;
 
 import org.example.configurations.AppSettings;
+import org.example.models.CustomRetrySpec;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,10 @@ public class CurrencyClient {
                 .headers(httpHeaders -> httpHeaders.addAll(headers))
                 .retrieve()
                 .bodyToMono(String.class)
-                .retryWhen(Retry.fixedDelay(appSettings.retryAttempts,
-                        Duration.ofMillis(appSettings.retryDelayMillis)));
+                .retryWhen(new CustomRetrySpec(3,
+                        Duration.ofMillis(50),
+                        Duration.ofMillis(100),
+                        Duration.ofMillis(150))
+                );
     }
 }
