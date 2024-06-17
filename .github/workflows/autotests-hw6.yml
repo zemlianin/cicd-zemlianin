@@ -80,7 +80,7 @@ jobs:
           helm upgrade --install converter ${{ inputs.chart-path }} \
             --set fullnameOverride=converter \
             --set image.repository=${{ inputs.converter-image-name }} \
-            --set image.tag=$IMAGE_TAG \
+            --set image.tag=${{ inputs.image-tag }} \
             -f tests/hw6/converter-values.yml \
             --wait --timeout 180s
 
@@ -90,7 +90,7 @@ jobs:
           helm upgrade --install accounts ${{ inputs.chart-path }} \
             --set fullnameOverride=accounts \
             --set image.repository=${{ inputs.accounts-image-name }} \
-            --set image.tag=$IMAGE_TAG \
+            --set image.tag=${{ inputs.image-tag }} \
             -f tests/hw6/accounts-values.yml \
             --wait --timeout 180s
 
