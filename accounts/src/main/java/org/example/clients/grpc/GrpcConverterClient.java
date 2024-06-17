@@ -22,9 +22,6 @@ public class GrpcConverterClient {
     @Autowired
     public GrpcConverterClient(AppSettings appSettings, CircuitBreakerRegistry circuitBreakerRegistry) {
         var parts = appSettings.converterUrl.split(":");
-        System.out.println(parts[0]);
-        System.out.println(parts[1]);
-
         ManagedChannel channel = ManagedChannelBuilder.forAddress(parts[0], Integer.parseInt(parts[1]))
                 .usePlaintext()
                 .build();
@@ -44,7 +41,6 @@ public class GrpcConverterClient {
     }
 
     private BigDecimal fallbackConvert(Currency fromCurrency, Currency toCurrency, BigDecimal amount, Throwable t) {
-        System.out.println("Fallback called due to: " + t.getMessage());
         return BigDecimal.ZERO;
     }
 }

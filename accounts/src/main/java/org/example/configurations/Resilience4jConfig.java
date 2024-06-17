@@ -2,6 +2,8 @@ package org.example.configurations;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.github.resilience4j.ratelimiter.RateLimiterConfig;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,5 +22,15 @@ public class Resilience4jConfig {
                 .permittedNumberOfCallsInHalfOpenState(3)
                 .build();
         return CircuitBreakerRegistry.of(config);
+    }
+
+    @Bean
+    public RateLimiterRegistry rateLimiterRegistry() {
+        RateLimiterConfig config = RateLimiterConfig.custom()
+                .limitForPeriod(5)
+                .limitRefreshPeriod(Duration.ofMinutes(1))
+                .timeoutDuration(Duration.ofMillis(0))
+                .build();
+        return RateLimiterRegistry.of(config);
     }
 }
