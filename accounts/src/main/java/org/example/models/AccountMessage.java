@@ -9,7 +9,6 @@ public class AccountMessage {
     private Currency currency;
     private BigDecimal balance;
 
-    // Геттеры и сеттеры
     public Long getAccountNumber() {
         return accountNumber;
     }

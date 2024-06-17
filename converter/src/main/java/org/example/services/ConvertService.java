@@ -42,11 +42,10 @@ public class ConvertService {
         var objectMapper = new ObjectMapper();
 
         var accessResponse = keycloakClient.auth(jwtConverterProperties.getResourceId(),appSettings.keycloakClientSecret);
-        System.out.println("прошла авторизация");
+
         var jsonString = currencyClient.GetRatesByCurrency(accessResponse).block();
-        System.out.println("Получил рейтс");
+
         RatesResponse ratesMono = null;
-        System.out.println(jsonString);
         try {
             ratesMono = objectMapper.readValue(jsonString, RatesResponse.class);
         } catch (JsonProcessingException e) {

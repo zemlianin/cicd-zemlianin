@@ -57,7 +57,6 @@ public class AccountService {
         if (accountRequest.getCustomerId() == null || accountRequest.getCurrency() == null) {
             throw new IllegalArgumentException("Missing required fields");
         }
-        System.out.println("-----");
         System.out.println(accountRequest.getCustomerId());
         var currency = accountRequest.getCurrency();
 
@@ -88,7 +87,6 @@ public class AccountService {
 
     public AccountBalanceResponse getAccountBalance(Long accountNumber) {
         Optional<Account> accountOpt = accountRepository.findById(accountNumber);
-        System.out.println("получил запрос на получение баланса");
 
         if (accountOpt.isEmpty()) {
             throw new IllegalArgumentException("Account not found");
@@ -113,7 +111,6 @@ public class AccountService {
             throw new IllegalArgumentException("Account not found");
         }
 
-        System.out.println("-----");
         System.out.println(topUpRequest.getAmount());
 
         Account account = accountOpt.get();
@@ -133,7 +130,6 @@ public class AccountService {
             throw new IllegalArgumentException("Amount must be greater than zero");
         }
 
-        System.out.println("-----");
         System.out.println(transferRequest.getAmountInSenderCurrency());
 
         Optional<Account> senderAccountOpt = accountRepository.findById(transferRequest.getSenderAccount());
