@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
@@ -184,7 +185,7 @@ public class AccountService {
         AccountMessage message = new AccountMessage();
         message.setAccountNumber(account.getAccountId());
         message.setCurrency(account.getCurrency());
-        message.setBalance(account.getBalance());
+        message.setBalance(account.getBalance().setScale(2, RoundingMode.HALF_EVEN));
         accountNotificationService.notifyAccountChange(message);
     }
 }
