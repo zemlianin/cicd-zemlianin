@@ -1,5 +1,7 @@
 package org.example.clients.grpc;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.example.configurations.AppSettings;
@@ -8,7 +10,6 @@ import org.example.grpc.ConverterServiceGrpc;
 import org.example.models.enums.Currency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
@@ -16,8 +17,10 @@ import java.math.BigDecimal;
 public class GrpcConverterClient {
     private final ConverterServiceGrpc.ConverterServiceBlockingStub blockingStub;
 
+    private final io.github.resilience4j.circuitbreaker.CircuitBreaker circuitBreaker;
+
     @Autowired
-    public GrpcConverterClient(AppSettings appSettings) {
+    public GrpcConverterClient(AppSettings appSettings, CircuitBreakerRegistry circuitBreakerRegistry) {
         var parts = appSettings.converterUrl.split(":");
         System.out.println(parts[0]);
         System.out.println(parts[1]);
@@ -26,24 +29,22 @@ public class GrpcConverterClient {
                 .usePlaintext()
                 .build();
         blockingStub = ConverterServiceGrpc.newBlockingStub(channel);
+        circuitBreaker = circuitBreakerRegistry.circuitBreaker("grpcConverter");
     }
 
+    @CircuitBreaker(name = "grpcConverter", fallbackMethod = "fallbackConvert")
     public BigDecimal convert(Currency fromCurrency, Currency toCurrency, BigDecimal amount) {
-        try {
             ConverterProto.ConvertRequest request = ConverterProto.ConvertRequest.newBuilder()
                     .setFromCurrency(fromCurrency.toString())
                     .setToCurrency(toCurrency.toString())
                     .setAmount(amount.doubleValue())
                     .build();
-            System.out.println("Запрос создан");
             ConverterProto.ConvertResponse response = blockingStub.convert(request);
-            System.out.println("конвертация прошла");
             return BigDecimal.valueOf(response.getConvertedAmount());
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            throw e;
-        }
+    }
 
+    private BigDecimal fallbackConvert(Currency fromCurrency, Currency toCurrency, BigDecimal amount, Throwable t) {
+        System.out.println("Fallback called due to: " + t.getMessage());
+        return BigDecimal.ZERO;
     }
 }
-

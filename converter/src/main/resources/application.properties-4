@@ -1,10 +1,10 @@
 logging.level.org.springframework.security=INFO
 random_value.max = 100
 client.timeout = 10000
-server.port=8080
+server.port=8081
 # server.port=8080
-# rate_client.url = http://localhost:${server.port}/rates
-rate_client.url = ${RATES_URL}/rates
+rate_client.url = http://localhost:${server.port}/rates
+# rate_client.url = ${RATES_URL}/rates
 rate_client.retry_attempts = 3
 rate_client.retry_delay_millis = 1000
 management.endpoint.health.probes.enabled=true
@@ -12,14 +12,14 @@ management.endpoint.health.group.liveness.include=livenessState
 management.endpoint.health.group.readiness.include=readinessState
 
 # Keycloak
-# keycloak.realm=auth
-keycloak.realm=${KEYCLOAK_REALM}
-# keycloak.url=http://194.87.186.59:8080
-keycloak.url=${KEYCLOAK_URL}
-# keycloak.client_secret=zThmHP3m3Wl5QIscj7t3Nf9ZOyAOPTRz
-keycloak.client_secret=${CLIENT_SECRET}
-# keycloak.resource=dwh-manager
-keycloak.resource=${CLIENT_ID}
+keycloak.realm=auth
+# keycloak.realm=${KEYCLOAK_REALM}
+keycloak.url=http://194.87.186.59:8080
+# keycloak.url=${KEYCLOAK_URL}
+keycloak.client_secret=zThmHP3m3Wl5QIscj7t3Nf9ZOyAOPTRz
+# keycloak.client_secret=${CLIENT_SECRET}
+keycloak.resource=dwh-manager
+# keycloak.resource=${CLIENT_ID}
 spring.security.oauth2.resourceserver.jwt.issuer-uri=${keycloak.url}/realms/${keycloak.realm}
 spring.security.oauth2.resourceserver.jwt.jwk-set-uri=${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 jwt.auth.converter.principal-attribute=principal_username
