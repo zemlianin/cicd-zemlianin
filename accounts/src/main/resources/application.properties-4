@@ -1,7 +1,7 @@
 # DB Configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/stage
+spring.datasource.url=jdbc:postgresql://194.87.186.59:5433/stage
 # spring.datasource.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-spring.datasource.username=postgres
+spring.datasource.username=postgres2
 #spring.datasource.username=${DB_USER}
 spring.datasource.password=1Q2w3e4r5t
 #spring.datasource.password=${DB_PASSWORD}
@@ -17,6 +17,7 @@ converter.url=localhost:8081
 client.retry_attempts=3
 client.retry_delay_millis = 1000
 logging.level.org.springframework.security=TRACE
+notification.url=http://localhost:8080
 
 # Keycloak
 keycloak.realm=auth

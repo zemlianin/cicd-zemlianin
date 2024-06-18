@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class WebClientConfiguration {
     private static String CONVERTER_URL;
+    private static String NOTIFICATION_URL;
     private static String KEYCLOAK_BASE_URL;
     public static int TIMEOUT;
 
@@ -29,11 +30,12 @@ public class WebClientConfiguration {
         CONVERTER_URL = appSettings.converterUrl;
         TIMEOUT = appSettings.timeout;
         KEYCLOAK_BASE_URL = appSettings.keycloakUrl;
+        NOTIFICATION_URL = appSettings.notificationUrl;
     }
 
     @Bean
     @Qualifier("converterClient")
-    public WebClient atlasClientWithTimeout() {
+    public WebClient converterClientWithTimeout() {
         final var tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)
@@ -43,6 +45,20 @@ public class WebClientConfiguration {
                 });
 
         return buildFromTcpClient(tcpClient, CONVERTER_URL);
+    }
+
+    @Bean
+    @Qualifier("notificationClient")
+    public WebClient notificationClientWithTimeout() {
+        final var tcpClient = TcpClient
+                .create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)
+                .doOnConnected(connection -> {
+                    connection.addHandlerLast(new ReadTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new WriteTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
+                });
+
+        return buildFromTcpClient(tcpClient, NOTIFICATION_URL);
     }
 
     private WebClient buildFromTcpClient(TcpClient tcpClient, String baseUrl) {

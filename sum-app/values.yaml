@@ -89,3 +89,5 @@ extraEnv:
     value: dwh-manager
   - name: CLIENT_SECRET
     value: zThmHP3m3Wl5QIscj7t3Nf9ZOyAOPTRz
+  - name: NOTIFICATION_SERVICE_URL
+    value: http://rates:8080

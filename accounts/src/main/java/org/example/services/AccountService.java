@@ -1,5 +1,6 @@
 package org.example.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.clients.ConverterClient;
 import org.example.clients.KeycloakClient;
 import org.example.clients.grpc.GrpcConverterClient;
@@ -34,6 +35,7 @@ public class AccountService {
     private final AppSettings appSettings;
     private final GrpcConverterClient grpcConverterClient;
     private final AccountNotificationService accountNotificationService;
+    private final OutboxService outboxService;
 
     @Autowired
     public AccountService(CustomerRepository customerRepository,
@@ -42,7 +44,8 @@ public class AccountService {
                           KeycloakClient keycloakClient,
                           AppSettings appSettings,
                           GrpcConverterClient grpcConverterClient,
-                          AccountNotificationService accountNotificationService
+                          AccountNotificationService accountNotificationService,
+                          OutboxService outboxService
     ) {
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
@@ -51,14 +54,14 @@ public class AccountService {
         this.appSettings = appSettings;
         this.grpcConverterClient = grpcConverterClient;
         this.accountNotificationService = accountNotificationService;
+        this.outboxService = outboxService;
     }
 
-    public AccountResponse createAccount(AccountRequest accountRequest) {
+    public AccountResponse createAccount(AccountRequest accountRequest) throws JsonProcessingException {
         if (accountRequest.getCustomerId() == null || accountRequest.getCurrency() == null) {
             throw new IllegalArgumentException("Missing required fields");
         }
-        System.out.println("-----");
-        System.out.println(accountRequest.getCustomerId());
+
         var currency = accountRequest.getCurrency();
 
         Optional<Customer> customerOpt = customerRepository.findById(accountRequest.getCustomerId());
@@ -81,14 +84,13 @@ public class AccountService {
 
         Account savedAccount = accountRepository.save(account);
 
-        notifyAccountChange(savedAccount);
+        notifyAccountChange(savedAccount, BigDecimal.ZERO);
 
         return new AccountResponse(savedAccount.getAccountId());
     }
 
     public AccountBalanceResponse getAccountBalance(Long accountNumber) {
         Optional<Account> accountOpt = accountRepository.findById(accountNumber);
-        System.out.println("получил запрос на получение баланса");
 
         if (accountOpt.isEmpty()) {
             throw new IllegalArgumentException("Account not found");
@@ -99,7 +101,7 @@ public class AccountService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void topUpAccount(Long accountNumber, TopUpRequest topUpRequest) {
+    public void topUpAccount(Long accountNumber, TopUpRequest topUpRequest) throws JsonProcessingException {
         if (topUpRequest.getAmount() == null) {
             throw new IllegalArgumentException("Missing required field: amount");
         }
@@ -113,18 +115,15 @@ public class AccountService {
             throw new IllegalArgumentException("Account not found");
         }
 
-        System.out.println("-----");
-        System.out.println(topUpRequest.getAmount());
-
         Account account = accountOpt.get();
         account.setBalance(account.getBalance().add(topUpRequest.getAmount()));
 
         accountRepository.save(account);
-        notifyAccountChange(account);
+        notifyAccountChange(account, topUpRequest.getAmount());
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void transferFunds(TransferRequest transferRequest) {
+    public void transferFunds(TransferRequest transferRequest) throws JsonProcessingException {
         if (transferRequest.getAmountInSenderCurrency() == null) {
             throw new IllegalArgumentException("Missing required field: amountInSenderCurrency");
         }
@@ -132,8 +131,6 @@ public class AccountService {
         if (transferRequest.getAmountInSenderCurrency().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero");
         }
-
-        System.out.println(transferRequest.getAmountInSenderCurrency());
 
         Optional<Account> senderAccountOpt = accountRepository.findById(transferRequest.getSenderAccount());
         Optional<Account> receiverAccountOpt = accountRepository.findById(transferRequest.getReceiverAccount());
@@ -175,16 +172,19 @@ public class AccountService {
 
         accountRepository.save(senderAccount);
         accountRepository.save(receiverAccount);
-        notifyAccountChange(senderAccount);
-        notifyAccountChange(receiverAccount);
-
+        notifyAccountChange(senderAccount, transferRequest.getAmountInSenderCurrency());
+        notifyAccountChange(receiverAccount, amountInReceiverCurrency);
     }
 
-    private void notifyAccountChange(Account account) {
+    private void notifyAccountChange(Account account, BigDecimal difference) throws JsonProcessingException {
         AccountMessage message = new AccountMessage();
         message.setAccountNumber(account.getAccountId());
         message.setCurrency(account.getCurrency());
         message.setBalance(account.getBalance().setScale(2, RoundingMode.HALF_EVEN));
         accountNotificationService.notifyAccountChange(message);
+
+        if (difference.compareTo(BigDecimal.ZERO) != 0) {
+            outboxService.addPayloadNotification(account, difference);
+        }
     }
 }

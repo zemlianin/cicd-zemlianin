@@ -1,14 +1,21 @@
 package org.example.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.models.NotificationPayload;
+import org.example.models.dao.customer.CustomerRequest;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/rates")
+@RequestMapping
 public class RateController {
-    @GetMapping
+    @GetMapping("/rates")
     public Integer getRate() {
+        return 200;
+    }
+
+    @PostMapping("/notification")
+    public Integer postNotification(@RequestBody NotificationPayload notificationPayload) {
+        System.out.println("Catch request");
+        System.out.println(notificationPayload.getCustomerId() + notificationPayload.getMessage());
         return 200;
     }
 }
