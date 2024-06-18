@@ -42,8 +42,7 @@ public class OutboxProcessor {
         for (Outbox outbox : outboxEntries) {
             var payload = objectMapper.readValue(outbox.getPayload(), NotificationPayload.class);
 
-            System.out.println(appSettings.notificationUrl);
-            notificationClient.postNotification(payload);
+            notificationClient.postNotification(payload).block();
 
             outbox.setProcessed(true);
             outboxRepository.save(outbox);

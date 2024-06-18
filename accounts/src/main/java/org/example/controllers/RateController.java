@@ -13,9 +13,10 @@ public class RateController {
     }
 
     @PostMapping("/notification")
-    public void postNotification(@RequestBody NotificationPayload notificationPayload) {
+    public Integer postNotification(@RequestBody NotificationPayload notificationPayload) {
         System.out.println("Catch request");
         System.out.println(notificationPayload.getCustomerId() + notificationPayload.getMessage());
+        return 200;
     }
 }
 

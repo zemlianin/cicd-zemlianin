@@ -67,10 +67,10 @@ jobs:
   autotest-hw-7:
     needs: build # имя вашей основной джобы сборки
     uses: ./.github/workflows/autotests-hw7.yml
-  with:
-    chart-path: ./sum-app # путь к чарту из второй дз
-    converter-image-name: zemlianin/converter # имя образа вашего приложения
-    accounts-image-name: zemlianin/accounts # имя образа вашего приложения
-    image-tag: latest # таг образа, который собран в рамках данного ПРа
-  secrets:
-    HSE_LOKI_TOKEN: ${{ secrets.HSE_LOKI_TOKEN }}
+    with:
+      chart-path: ./sum-app # путь к чарту из второй дз
+      converter-image-name: zemlianin/converter # имя образа вашего приложения
+      accounts-image-name: zemlianin/accounts # имя образа вашего приложения
+      image-tag: latest # таг образа, который собран в рамках данного ПРа
+    secrets:
+      HSE_LOKI_TOKEN: ${{ secrets.HSE_LOKI_TOKEN }}
