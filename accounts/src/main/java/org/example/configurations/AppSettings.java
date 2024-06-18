@@ -29,4 +29,7 @@ public class AppSettings {
 
     @Value("${app.keep_grpc_connect}")
     public Boolean keepGrpcConnect;
+
+    @Value("${notification.url}")
+    public String notificationUrl;
 }

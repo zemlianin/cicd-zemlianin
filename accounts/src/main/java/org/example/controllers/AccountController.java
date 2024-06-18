@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.models.dao.*;
 import org.example.models.dao.account.AccountBalanceResponse;
 import org.example.models.dao.account.AccountRequest;
@@ -21,7 +22,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest accountRequest) throws JsonProcessingException {
         AccountResponse response = accountService.createAccount(accountRequest);
         return ResponseEntity.ok(response);
     }

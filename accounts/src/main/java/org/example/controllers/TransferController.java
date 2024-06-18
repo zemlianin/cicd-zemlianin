@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.models.dao.TransferRequest;
 import org.example.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class TransferController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> transferFunds(@RequestBody TransferRequest transferRequest) {
+    public ResponseEntity<Void> transferFunds(@RequestBody TransferRequest transferRequest) throws JsonProcessingException {
         accountService.transferFunds(transferRequest);
         return ResponseEntity.ok().build();
     }
