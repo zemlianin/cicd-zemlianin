@@ -26,7 +26,10 @@ public class ConverterClient {
         this.appSettings = appSettings;
     }
 
-    public Mono<CurrencyResponse> GetConvertedAmount(Currency from, Currency to, BigDecimal amount, Mono<String> accessTokenMono) {
+    public Mono<CurrencyResponse> GetConvertedAmount(Currency from,
+                                                     Currency to,
+                                                     BigDecimal amount,
+                                                     Mono<String> accessTokenMono) {
         var headers = new HttpHeaders();
 
         headers.setBearerAuth(accessTokenMono.block());

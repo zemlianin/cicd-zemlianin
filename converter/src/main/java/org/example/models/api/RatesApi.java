@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2024-02-27T23:37:12.135063400+03:00[Europe/Moscow]")
 @Validated
 public interface RatesApi {
-
     @Operation(summary = "Returns rates.", description = "Optional extended description in CommonMark or HTML.", tags={  })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "A JSON array of user names", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RatesResponse.class))) })

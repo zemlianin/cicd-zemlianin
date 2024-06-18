@@ -17,6 +17,7 @@ import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.TcpClient;
 
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 @Configuration
 public class WebClientConfiguration {

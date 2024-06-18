@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 
 @Service
 public class ConvertService {
-    private static final Logger logger = LogManager.getLogger(ConvertService.class);
     CurrencyClient currencyClient;
     KeycloakClient keycloakClient;
     JwtConverterProperties jwtConverterProperties;
@@ -39,23 +38,8 @@ public class ConvertService {
     }
 
     public BigDecimal convert(Currency currencyFrom, Currency currencyTo, BigDecimal amount) {
-        var objectMapper = new ObjectMapper();
-
         var accessResponse = keycloakClient.auth(jwtConverterProperties.getResourceId(),appSettings.keycloakClientSecret);
-        System.out.println("прошла авторизация");
-        var jsonString = currencyClient.GetRatesByCurrency(accessResponse).block();
-        System.out.println("Получил рейтс");
-        RatesResponse ratesMono = null;
-        System.out.println(jsonString);
-        try {
-            ratesMono = objectMapper.readValue(jsonString, RatesResponse.class);
-        } catch (JsonProcessingException e) {
-            System.out.println("Error of parsing");
-        }
-
-        if(ratesMono == null){
-            System.out.println("Rates is null");
-        }
+        var ratesMono = currencyClient.GetRatesByCurrency(accessResponse).block();
 
         return convertBase(ratesMono, currencyFrom, currencyTo, amount);
     }
@@ -63,8 +47,6 @@ public class ConvertService {
                                   Currency currencyFrom,
                                   Currency currencyTo,
                                   BigDecimal amount) {
-        System.out.println(rates.getRates());
-
         if (!rates.getRates().containsKey(currencyFrom.toString())) {
             throw new IllegalArgumentException(currencyFrom.toString());
         }

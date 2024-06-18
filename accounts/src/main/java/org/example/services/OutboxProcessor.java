@@ -21,7 +21,6 @@ public class OutboxProcessor {
     private final OutboxRepository outboxRepository;
     private final ObjectMapper objectMapper;
     private final NotificationClient notificationClient;
-    private final AppSettings appSettings;
 
     @Autowired
     public OutboxProcessor(OutboxRepository outboxRepository,
@@ -31,7 +30,6 @@ public class OutboxProcessor {
         this.objectMapper = objectMapper;
         this.outboxRepository = outboxRepository;
         this.notificationClient = notificationClient;
-        this.appSettings = appSettings;
     }
 
     @Scheduled(fixedRate = 3000)

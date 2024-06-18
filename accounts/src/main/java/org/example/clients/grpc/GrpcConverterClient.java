@@ -17,16 +17,13 @@ import java.math.BigDecimal;
 public class GrpcConverterClient {
     private final ConverterServiceGrpc.ConverterServiceBlockingStub blockingStub;
 
-    private final io.github.resilience4j.circuitbreaker.CircuitBreaker circuitBreaker;
-
     @Autowired
-    public GrpcConverterClient(AppSettings appSettings, CircuitBreakerRegistry circuitBreakerRegistry) {
+    public GrpcConverterClient(AppSettings appSettings) {
         var parts = appSettings.converterUrl.split(":");
         ManagedChannel channel = ManagedChannelBuilder.forAddress(parts[0], Integer.parseInt(parts[1]))
                 .usePlaintext()
                 .build();
         blockingStub = ConverterServiceGrpc.newBlockingStub(channel);
-        circuitBreaker = circuitBreakerRegistry.circuitBreaker("grpcConverter");
     }
 
     @CircuitBreaker(name = "grpcConverter", fallbackMethod = "fallbackConvert")

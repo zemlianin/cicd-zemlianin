@@ -23,9 +23,7 @@ import java.util.Optional;
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
-
     private final AccountRepository accountRepository;
-
     private final ConverterClient converterClient;
     private final KeycloakClient keycloakClient;
     private final AppSettings appSettings;

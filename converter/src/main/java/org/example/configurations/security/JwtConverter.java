@@ -25,7 +25,6 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
 
     private final JwtConverterProperties properties;
 
-
     @Autowired
     public JwtConverter(JwtConverterProperties properties) {
         this.properties = properties;

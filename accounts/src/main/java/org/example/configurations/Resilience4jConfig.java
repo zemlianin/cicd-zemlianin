@@ -23,14 +23,4 @@ public class Resilience4jConfig {
                 .build();
         return CircuitBreakerRegistry.of(config);
     }
-
-    /*@Bean
-    public RateLimiterRegistry rateLimiterRegistry() {
-        RateLimiterConfig config = RateLimiterConfig.custom()
-                .limitForPeriod(5)
-                .limitRefreshPeriod(Duration.ofMinutes(1))
-                .timeoutDuration(Duration.ofMillis(0))
-                .build();
-        return RateLimiterRegistry.of(config);
-    }*/
 }

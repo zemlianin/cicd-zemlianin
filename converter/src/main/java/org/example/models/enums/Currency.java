@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-/**
- * Gets or Sets Currency
- */
 public enum Currency {
   RUB("RUB"),
     CNY("CNY"),

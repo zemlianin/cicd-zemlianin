@@ -66,8 +66,8 @@ public class ConvertController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorCurrencyResponse> handleGeneralException(Exception ex) {
         var response = new ErrorCurrencyResponse();
-        System.out.println(ex.getMessage());
 
+        logger.error(ex.getMessage());
         response.setMessage("Unknown Error");
 
         return new ResponseEntity<>(response, HttpStatus.valueOf(500));
